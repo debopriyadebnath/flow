@@ -1,6 +1,7 @@
 Django>=5.0,<6.0
 Djangorestframework>=3.15,<4.0
 djangorestframework-simplejwt>=5.3,<6.0
+PyJWT>=2.8,<3.0
 django-filter>=24.2,<25.0
 django-cors-headers>=4.4,<5.0
 cloudinary>=1.41,<2.0
