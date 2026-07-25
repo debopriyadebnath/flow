@@ -19,7 +19,7 @@ export function LoginForm() {
         email: String(formData.get("email") || ""),
         password: String(formData.get("password") || ""),
       });
-      router.push("/profile");
+      router.push("/dashboard");
     } catch {
       setError("Unable to sign in. Check your email and password.");
     }

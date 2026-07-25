@@ -21,7 +21,7 @@ export function RegisterForm() {
         first_name: String(formData.get("first_name") || ""),
         last_name: String(formData.get("last_name") || ""),
       });
-      router.push("/profile");
+      router.push("/dashboard");
     } catch {
       setError("Unable to create your account right now.");
     }

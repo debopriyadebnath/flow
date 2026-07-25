@@ -1,9 +1,15 @@
 """Root URL configuration for HERmony backend."""
 
 from django.contrib import admin
-from django.urls import include, path
+from django.contrib import admin
+from django.urls import path, include
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/", include("apps.api.urls")),
+
+    path(
+        "api/auth/",
+        include("apps.authentication.urls")
+    ),
 ]
