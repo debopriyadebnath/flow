@@ -1,4 +1,4 @@
-"""WSGI config for Flow+ backend."""
+"""WSGI config for HERmony backend."""
 
 import os
 

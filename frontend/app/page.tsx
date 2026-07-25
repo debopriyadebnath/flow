@@ -1,8 +1,8 @@
 export default function HomePage() {
   return (
     <main>
-      <h1>Flow+</h1>
-      <p>Your AI Women's Wellness Companion</p>
+      <h1>HERmony</h1>
+      <p>Find your rhythm. Live in HERmony.</p>
     </main>
   );
 }

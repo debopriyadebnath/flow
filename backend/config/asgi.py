@@ -1,4 +1,4 @@
-"""ASGI config for Flow+ backend."""
+"""ASGI config for HERmony backend."""
 
 import os
 

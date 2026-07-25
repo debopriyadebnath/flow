@@ -1,6 +1,6 @@
-# Flow+ Backend
+# HERmony Backend
 
-Django REST API for Flow+, an AI-powered women's wellness platform.
+Django REST API for HERmony, an AI-powered women's wellness companion focused on cycle tracking, mood support, PCOS management, healthy habits, and private wellness insights.
 
 ## Phase 1 scope
 - Backend Django project bootstrap

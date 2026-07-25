@@ -1,4 +1,4 @@
-"""API router registration for Flow+ backend."""
+"""API router registration for HERmony backend."""
 
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter

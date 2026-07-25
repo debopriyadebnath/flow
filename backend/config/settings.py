@@ -1,4 +1,4 @@
-"""Django settings for the Flow+ backend.
+"""Django settings for the HERmony backend.
 
 This initial scaffold keeps configuration centralized and phase 1 focused.
 """
@@ -23,6 +23,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "cloudinary_storage",
+    "cloudinary",
     "corsheaders",
     "rest_framework",
     "rest_framework_simplejwt",
@@ -43,6 +45,8 @@ INSTALLED_APPS = [
     "apps.utils",
     "apps.api",
 ]
+
+AUTH_USER_MODEL = "authentication.User"
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -101,6 +105,16 @@ STATIC_URL = "static/"
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME", ""),
+    "API_KEY": os.getenv("CLOUDINARY_API_KEY", ""),
+    "API_SECRET": os.getenv("CLOUDINARY_API_SECRET", ""),
+    "SECURE": os.getenv("CLOUDINARY_SECURE", "True").lower() == "true",
+}
+
+if CLOUDINARY_STORAGE["CLOUD_NAME"]:
+    DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (

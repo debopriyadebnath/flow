@@ -1,4 +1,4 @@
-"""Root URL configuration for Flow+ backend."""
+"""Root URL configuration for HERmony backend."""
 
 from django.contrib import admin
 from django.urls import include, path

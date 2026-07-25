@@ -1,8 +1,8 @@
 import "../styles/globals.css";
 
 export const metadata = {
-  title: "Flow+",
-  description: "Your AI Women's Wellness Companion",
+  title: "HERmony",
+  description: "Find your rhythm. Live in HERmony.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
