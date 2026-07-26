@@ -1,9 +1,4 @@
-import axios from "axios";
-
-const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
-  headers: { "Content-Type": "application/json" },
-});
+import api from "@/lib/api";
 
 export type AuthTokens = {
   access: string;
@@ -30,10 +25,11 @@ export type UserProfile = {
   avatar: string | null;
 };
 
-export type AuthPayload = {
+export type AuthSession = {
+  message: string;
   user: AuthUser;
-  profile: UserProfile;
-  tokens: AuthTokens;
+  profile?: UserProfile | null;
+  tokens?: AuthTokens | null;
 };
 
 export async function register(payload: {
@@ -42,12 +38,12 @@ export async function register(payload: {
   first_name?: string;
   last_name?: string;
 }) {
-  const response = await api.post<AuthPayload>("/auth/register/", payload);
+  const response = await api.post<AuthSession>("/auth/register/", payload);
   return response.data;
 }
 
 export async function login(payload: { email: string; password: string }) {
-  const response = await api.post<AuthPayload>("/auth/login/", payload);
+  const response = await api.post<AuthSession>("/auth/login/", payload);
   return response.data;
 }
 
