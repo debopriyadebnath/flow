@@ -1,21 +1,63 @@
-from __future__ import annotations
-
-from django.conf import settings
 from django.db import models
+from django.conf import settings
 
-from apps.core.models import TimeStampedModel
+
+class Profile(models.Model):
+
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="profile"
+    )
+
+    date_of_birth = models.DateField(
+        null=True,
+        blank=True
+    )
+
+    height = models.FloatField(
+        null=True,
+        blank=True
+    )
+
+    weight = models.FloatField(
+        null=True,
+        blank=True
+    )
+
+    cycle_length = models.IntegerField(
+        default=28
+    )
+
+    period_duration = models.IntegerField(
+        default=5
+    )
+
+    last_period_date = models.DateField(
+        null=True,
+        blank=True
+    )
+
+    has_pcos = models.BooleanField(
+        default=False
+    )
+
+    has_endometriosis = models.BooleanField(
+        default=False
+    )
+
+    health_goals = models.TextField(
+        blank=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
 
 
-class UserProfile(TimeStampedModel):
-    blood_group = models.CharField(max_length=5, blank=True)
-    age = models.PositiveSmallIntegerField(null=True, blank=True)
-    weight_kg = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    height_cm = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    medical_history = models.TextField(blank=True)
-    emergency_contact_name = models.CharField(max_length=150, blank=True)
-    emergency_contact_phone = models.CharField(max_length=32, blank=True)
-    avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
-
-    def __str__(self) -> str:
-        return f"Profile for {self.user.email}"
+    def __str__(self):
+        return self.user.email
