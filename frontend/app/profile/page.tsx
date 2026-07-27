@@ -23,15 +23,13 @@ export default function ProfilePage() {
       console.log("TOKEN:", token);
 
 
-
       if (!token) {
 
         setError("No access token found. Please login again.");
         setLoading(false);
-
         return;
-      }
 
+      }
 
 
       try {
@@ -39,7 +37,10 @@ export default function ProfilePage() {
         const response = await getProfile(token);
 
 
-        console.log("PROFILE RESPONSE:", response);
+        console.log(
+          "PROFILE RESPONSE:",
+          JSON.stringify(response, null, 2)
+        );
 
 
         setData(response);
@@ -47,12 +48,11 @@ export default function ProfilePage() {
 
       } catch (err: any) {
 
-
         console.log("PROFILE ERROR:", err);
 
 
         setError(
-          err.response?.data?.detail ||
+          err?.response?.data?.detail ||
           "Unable to load profile"
         );
 
@@ -77,11 +77,15 @@ export default function ProfilePage() {
   if (loading) {
 
     return (
+
       <main className="min-h-screen bg-pink-50 p-10">
+
         <h1 className="text-2xl font-semibold">
-          Loading profile... 🌸
+          Loading profile 🌸
         </h1>
+
       </main>
+
     );
 
   }
@@ -92,6 +96,7 @@ export default function ProfilePage() {
   if (error) {
 
     return (
+
       <main className="min-h-screen bg-pink-50 p-10">
 
         <div className="rounded-3xl bg-white p-8 shadow">
@@ -107,9 +112,22 @@ export default function ProfilePage() {
         </div>
 
       </main>
+
     );
 
   }
+
+
+
+  // handles both:
+  // response.user.first_name
+  // response.first_name
+
+  const user = data?.user || data;
+
+
+
+  const profile = data?.profile || {};
 
 
 
@@ -131,74 +149,71 @@ export default function ProfilePage() {
 
 
 
-          {data && (
-
-            <div className="mt-8 space-y-4 text-slate-700">
+          <div className="mt-8 space-y-5 text-slate-700">
 
 
-              <div>
-                <b>Name:</b>{" "}
-                {data.user.first_name} {data.user.last_name}
-              </div>
-
-
-
-              <div>
-                <b>Email:</b>{" "}
-                {data.user.email}
-              </div>
+            <p>
+              <b>Name:</b>{" "}
+              {user?.first_name || "Not added"}{" "}
+              {user?.last_name || ""}
+            </p>
 
 
 
-              <hr />
+            <p>
+              <b>Email:</b>{" "}
+              {user?.email || "Not added"}
+            </p>
 
 
 
-              <div>
-                <b>Blood Group:</b>{" "}
-                {data.profile?.blood_group || "Not added"}
-              </div>
+            <hr />
 
 
 
-              <div>
-                <b>Age:</b>{" "}
-                {data.profile?.age || "Not added"}
-              </div>
+            <p>
+              <b>Blood Group:</b>{" "}
+              {profile?.blood_group || "Not added"}
+            </p>
 
 
 
-              <div>
-                <b>Weight:</b>{" "}
-                {data.profile?.weight_kg || "Not added"} kg
-              </div>
+            <p>
+              <b>Age:</b>{" "}
+              {profile?.age || "Not added"}
+            </p>
 
 
 
-              <div>
-                <b>Height:</b>{" "}
-                {data.profile?.height_cm || "Not added"} cm
-              </div>
+            <p>
+              <b>Weight:</b>{" "}
+              {profile?.weight_kg || "Not added"} kg
+            </p>
 
 
 
-              <div>
-                <b>Medical History:</b>{" "}
-                {data.profile?.medical_history || "Not added"}
-              </div>
+            <p>
+              <b>Height:</b>{" "}
+              {profile?.height_cm || "Not added"} cm
+            </p>
 
 
 
-              <div>
-                <b>Emergency Contact:</b>{" "}
-                {data.profile?.emergency_contact_name || "Not added"}
-              </div>
+            <p>
+              <b>Medical History:</b>{" "}
+              {profile?.medical_history || "Not added"}
+            </p>
 
 
 
-            </div>
+            <p>
+              <b>Emergency Contact:</b>{" "}
+              {profile?.emergency_contact_name || "Not added"}
+            </p>
 
-          )}
+
+
+          </div>
 
 
 
