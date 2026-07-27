@@ -10,7 +10,12 @@ class Journal(TimeStampedModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="journals")
     title = models.CharField(max_length=180)
     content = models.TextField()
-    mood = models.ForeignKey("mood.Mood", on_delete=models.SET_NULL, null=True, blank=True, related_name="journals")
+    mood = models.ForeignKey(
+    "mood.MoodEntry",
+    on_delete=models.CASCADE,
+    null=True,
+    blank=True,
+)
 
     class Meta:
         ordering = ("-created_at",)

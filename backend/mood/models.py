@@ -15,8 +15,7 @@ class MoodEntry(models.Model):
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="mood_entries"
+        on_delete=models.CASCADE
     )
 
     mood = models.CharField(
@@ -28,14 +27,10 @@ class MoodEntry(models.Model):
         blank=True
     )
 
-    energy_level = models.PositiveSmallIntegerField(
+    energy_level = models.IntegerField(
         default=5
     )
 
     created_at = models.DateTimeField(
         auto_now_add=True
     )
-
-
-    def __str__(self):
-        return f"{self.user.email} - {self.mood}"
