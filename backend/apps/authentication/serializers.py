@@ -1,20 +1,24 @@
 from django.contrib.auth import authenticate
 from rest_framework import serializers
-from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import User
+from .models import User, Profile
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, min_length=8)
+    password = serializers.CharField(
+        write_only=True,
+        min_length=8
+    )
 
     class Meta:
         model = User
         fields = [
+            "id",
             "email",
-            "password",
+            "username",
             "first_name",
             "last_name",
+            "password",
         ]
 
     def create(self, validated_data):
@@ -23,6 +27,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         user = User(**validated_data)
         user.set_password(password)
         user.save()
+
+        Profile.objects.create(user=user)
 
         return user
 
@@ -37,7 +43,7 @@ class LoginSerializer(serializers.Serializer):
 
         user = authenticate(
             username=email,
-            password=password,
+            password=password
         )
 
         if not user:
@@ -55,16 +61,49 @@ class UserSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "email",
+            "username",
             "first_name",
             "last_name",
-            "date_joined",
+        ]
+        read_only_fields = ["id", "email"]
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Profile
+        fields = [
+            "user",
+            "date_of_birth",
+            "height",
+            "weight",
+            "blood_group",
+            "cycle_length",
+            "period_length",
+            "last_period_date",
+            "pcos",
+            "endometriosis",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = [
+            "created_at",
+            "updated_at",
         ]
 
 
-def get_tokens(user):
-    refresh = RefreshToken.for_user(user)
-
-    return {
-        "refresh": str(refresh),
-        "access": str(refresh.access_token),
-    }
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = [
+            "date_of_birth",
+            "height",
+            "weight",
+            "blood_group",
+            "cycle_length",
+            "period_length",
+            "last_period_date",
+            "pcos",
+            "endometriosis",
+        ]

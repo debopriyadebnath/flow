@@ -24,4 +24,8 @@ urlpatterns = [
         "api/mood/",
         include("apps.mood.urls")
     ),
+    path(
+    "api/pcos/",
+    include("apps.pcos.urls")
+),
 ]

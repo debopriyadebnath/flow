@@ -2,16 +2,86 @@
 @tailwind components;
 @tailwind utilities;
 
+
 :root {
-  color-scheme: light;
+
+  --background: #fff8fc;
+  --foreground: #29243d;
+
+  --pink: #f9c5d1;
+  --lavender: #d8c7ff;
+  --peach: #ffd6a5;
+  --mint: #b8f2e6;
+  --sky: #bde0fe;
+
 }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
+
+  background: var(--background);
+
+  color: var(--foreground);
+
+  font-family: var(--font-body), sans-serif;
+
+}
+
+
+h1,
+h2,
+h3 {
+
+  font-family: var(--font-heading), serif;
+
+}
+
+
+
+* {
+
+  box-sizing: border-box;
+
+}
+
+
+.card-glass {
+
+  background: rgba(255,255,255,0.65);
+
+  backdrop-filter: blur(16px);
+
+  border: 1px solid rgba(255,255,255,0.5);
+
+  border-radius: 2rem;
+
+  box-shadow:
+    0 10px 40px rgba(249,197,209,0.25);
+
+}
+
+
+
+.gradient-pink {
+
+  background:
+  linear-gradient(
+    135deg,
+    #f9c5d1,
+    #d8c7ff
+  );
+
+}
+
+
+
+.gradient-mint {
+
+  background:
+  linear-gradient(
+    135deg,
+    #b8f2e6,
+    #bde0fe
+  );
+
 }

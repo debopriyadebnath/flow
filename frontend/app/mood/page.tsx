@@ -2,223 +2,482 @@
 
 import { useEffect, useState } from "react";
 
+import { GlassCard } from "@/components/hermony/glass-card";
+import { MoodBubble } from "@/components/hermony/mood-bubble";
+
 import {
   createMood,
   getMoods,
 } from "@/services/mood";
 
 
-export default function MoodPage() {
 
-  const [mood, setMood] = useState("calm");
-  const [note, setNote] = useState("");
-  const [energy, setEnergy] = useState(5);
+const moods = [
 
-  const [moods, setMoods] = useState<any[]>([]);
+  {
+    value: "happy",
+    emoji: "😊",
+    label: "Happy",
+  },
 
+  {
+    value: "calm",
+    emoji: "🌸",
+    label: "Calm",
+  },
 
-  async function loadMoods() {
+  {
+    value: "sad",
+    emoji: "🌧️",
+    label: "Sad",
+  },
 
-    const token = localStorage.getItem("access");
+  {
+    value: "anxious",
+    emoji: "😰",
+    label: "Anxious",
+  },
 
-    if (!token) return;
+  {
+    value: "tired",
+    emoji: "😴",
+    label: "Tired",
+  },
 
+  {
+    value: "excited",
+    emoji: "✨",
+    label: "Excited",
+  },
 
-    const data = await getMoods(token);
+];
 
-    setMoods(data);
 
-  }
 
+export default function MoodPage(){
 
 
-  async function handleSubmit(
-    e: React.FormEvent
-  ) {
+const [selectedMood,setSelectedMood]
+=
+useState("calm");
 
-    e.preventDefault();
 
+const [note,setNote]
+=
+useState("");
 
-    const token = localStorage.getItem("access");
 
-    if (!token) return;
+const [energy,setEnergy]
+=
+useState(7);
 
 
-    await createMood(
-      token,
-      {
-        mood,
-        note,
-        energy_level: energy,
-      }
-    );
+const [history,setHistory]
+=
+useState<any[]>([]);
 
 
-    setNote("");
-    setEnergy(5);
 
+async function loadMood(){
 
-    loadMoods();
+const token =
+localStorage.getItem("access");
 
-  }
 
+if(!token) return;
 
 
-  useEffect(() => {
+const data =
+await getMoods(token);
 
-    loadMoods();
 
-  }, []);
+setHistory(data);
 
 
+}
 
-  return (
 
-    <main className="min-h-screen bg-pink-50 p-6">
 
+useEffect(()=>{
 
-      <div className="mx-auto max-w-2xl space-y-6">
+loadMood();
 
+},[]);
 
-        <div className="rounded-3xl bg-white p-8 shadow">
 
 
-          <h1 className="text-3xl font-semibold">
-            How are you feeling today? 🌸
-          </h1>
 
 
+async function saveMood(){
 
-          <form
-            onSubmit={handleSubmit}
-            className="mt-6 space-y-4"
-          >
 
+const token =
+localStorage.getItem("access");
 
-            <select
-              value={mood}
-              onChange={(e)=>setMood(e.target.value)}
-              className="w-full rounded-xl border p-3"
-            >
 
-              <option value="happy">
-                😊 Happy
-              </option>
+if(!token) return;
 
-              <option value="calm">
-                🌸 Calm
-              </option>
 
-              <option value="sad">
-                😔 Sad
-              </option>
 
-              <option value="anxious">
-                😰 Anxious
-              </option>
+await createMood(
 
-              <option value="angry">
-                😡 Angry
-              </option>
+token,
 
-              <option value="tired">
-                😴 Tired
-              </option>
+{
 
-            </select>
+mood:selectedMood,
 
+note,
 
+energy_level:energy,
 
-            <textarea
-              placeholder="Write something about your day..."
-              value={note}
-              onChange={(e)=>setNote(e.target.value)}
-              className="w-full rounded-xl border p-3"
-            />
+}
 
+);
 
 
-            <div>
 
-              <label>
-                Energy level: {energy}/10
-              </label>
+setNote("");
 
-              <input
-                type="range"
-                min="1"
-                max="10"
-                value={energy}
-                onChange={(e)=>setEnergy(Number(e.target.value))}
-                className="w-full"
-              />
+setEnergy(7);
 
-            </div>
+loadMood();
 
 
+}
 
-            <button
-              className="w-full rounded-xl bg-pink-500 py-3 text-white"
-            >
-              Save Mood
-            </button>
 
 
-          </form>
 
 
-        </div>
+return (
 
 
+<main className="
+min-h-screen
+bg-[#fff8fc]
+p-6
+pb-32
+">
 
 
-        <div className="rounded-3xl bg-white p-8 shadow">
+<div className="
+mx-auto
+max-w-5xl
+space-y-8
+">
 
 
-          <h2 className="text-xl font-semibold">
-            Previous moods 💗
-          </h2>
 
+<GlassCard
 
+className="
+bg-gradient-to-br
+from-pink-100
+via-purple-50
+to-blue-100
+"
 
-          <div className="mt-4 space-y-3">
+>
 
 
-            {moods.map((item)=>(
-              
-              <div
-                key={item.id}
-                className="rounded-xl bg-pink-50 p-4"
-              >
+<h1 className="
+text-5xl
+font-bold
+text-slate-800
+">
 
-                <p className="font-medium">
-                  {item.mood}
-                </p>
+How are you feeling today? 🌸
 
-                <p>
-                  Energy: {item.energy_level}/10
-                </p>
+</h1>
 
-                <p className="text-sm text-gray-600">
-                  {item.note}
-                </p>
 
-              </div>
+<p className="
+mt-3
+text-slate-600
+">
 
-            ))}
+Your emotions are data. Let's understand them gently 💗
 
+</p>
 
-          </div>
 
 
-        </div>
+<div className="
+mt-8
+flex
+flex-wrap
+gap-5
+">
 
 
-      </div>
+{moods.map((item)=>(
 
 
-    </main>
+<MoodBubble
 
-  );
+key={item.value}
+
+emoji={item.emoji}
+
+label={item.label}
+
+active={
+selectedMood===item.value
+}
+
+onClick={()=>
+setSelectedMood(item.value)
+}
+
+/>
+
+
+))}
+
+
+</div>
+
+
+</GlassCard>
+
+
+
+
+
+<GlassCard>
+
+
+<h2 className="
+text-2xl
+font-semibold
+">
+
+Energy Level ⚡
+
+</h2>
+
+
+
+<p className="
+mt-2
+text-4xl
+font-bold
+text-pink-500
+">
+
+{energy}/10
+
+</p>
+
+
+
+<input
+
+type="range"
+
+min="1"
+
+max="10"
+
+value={energy}
+
+onChange={(e)=>
+setEnergy(
+Number(e.target.value)
+)
+}
+
+className="
+mt-6
+w-full
+accent-pink-500
+"
+
+/>
+
+
+</GlassCard>
+
+
+
+
+
+
+<GlassCard>
+
+
+<h2 className="
+text-2xl
+font-semibold
+">
+
+Tell me more 💭
+
+</h2>
+
+
+
+<textarea
+
+value={note}
+
+onChange={(e)=>
+setNote(e.target.value)
+}
+
+placeholder="
+Write about your day...
+"
+
+className="
+mt-5
+h-32
+w-full
+rounded-3xl
+border
+p-5
+outline-none
+"
+
+/>
+
+
+
+<button
+
+onClick={saveMood}
+
+className="
+mt-5
+rounded-3xl
+bg-gradient-to-r
+from-pink-400
+to-purple-400
+px-8
+py-4
+font-semibold
+text-white
+shadow-lg
+"
+
+>
+
+Save my mood 🌷
+
+</button>
+
+
+</GlassCard>
+
+
+
+
+
+
+
+<GlassCard>
+
+
+<div className="
+flex
+justify-between
+items-center
+">
+
+
+<h2 className="
+text-2xl
+font-semibold
+">
+
+Mood Journey 💗
+
+</h2>
+
+
+<span className="
+rounded-full
+bg-pink-100
+px-4
+py-2
+">
+
+🔥 {history.length} logs
+
+</span>
+
+
+</div>
+
+
+
+<div className="
+mt-6
+space-y-4
+">
+
+
+{history.map((item)=>(
+
+
+<div
+
+key={item.id}
+
+className="
+rounded-3xl
+bg-pink-50
+p-5
+"
+
+>
+
+
+<p className="
+font-semibold
+text-pink-500
+">
+
+{item.mood}
+
+</p>
+
+
+<p>
+Energy: {item.energy_level}/10
+</p>
+
+
+<p className="
+text-slate-500
+">
+
+{item.note}
+
+</p>
+
+
+</div>
+
+
+))}
+
+
+</div>
+
+
+</GlassCard>
+
+
+
+</div>
+
+
+</main>
+
+
+);
+
 
 }

@@ -1,44 +1,65 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-import { createCycle } from "@/services/cycles";
+import {
+  createCycle,
+  getCycles,
+} from "@/services/cycles";
 
 
-export default function CyclePage() {
+export default function CyclesPage() {
 
-  const router = useRouter();
 
   const [lastPeriodStart, setLastPeriodStart] = useState("");
   const [cycleLength, setCycleLength] = useState(28);
   const [periodLength, setPeriodLength] = useState(5);
 
-  const [loading, setLoading] = useState(false);
+  const [cycles, setCycles] = useState<any[]>([]);
+
   const [message, setMessage] = useState("");
+
+
+
+  async function loadCycles(){
+
+    const token = localStorage.getItem("access");
+
+    if(!token) return;
+
+
+    const data = await getCycles(token);
+
+    setCycles(data);
+
+  }
+
+
+
+  useEffect(()=>{
+
+    loadCycles();
+
+  },[]);
+
+
 
 
 
   async function handleSubmit(
     e: React.FormEvent
-  ) {
+  ){
 
     e.preventDefault();
 
 
     const token = localStorage.getItem("access");
 
-
-    if (!token) {
-      setMessage("Please login again");
-      return;
-    }
+    if(!token) return;
 
 
-    try {
 
-      setLoading(true);
-
+    try{
 
       await createCycle(
         token,
@@ -56,24 +77,18 @@ export default function CyclePage() {
       );
 
 
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 1000);
+      setLastPeriodStart("");
+      
+      loadCycles();
 
 
-
-    } catch (error) {
+    }catch(error){
 
       console.log(error);
 
       setMessage(
-        "Unable to save cycle"
+        "Something went wrong"
       );
-
-
-    } finally {
-
-      setLoading(false);
 
     }
 
@@ -81,49 +96,91 @@ export default function CyclePage() {
 
 
 
+
+
   return (
 
-    <main className="min-h-screen bg-pink-50 px-6 py-10">
+    <main className="
+      min-h-screen
+      bg-pink-50
+      px-6
+      py-10
+    ">
 
 
-      <div className="mx-auto max-w-xl">
+      <div className="
+        mx-auto
+        max-w-3xl
+        space-y-8
+      ">
 
 
-        <div className="rounded-3xl bg-white p-8 shadow">
+        <div className="
+          rounded-[2rem]
+          bg-white
+          p-8
+          shadow
+        ">
 
 
-          <h1 className="text-3xl font-semibold">
+          <h1 className="
+            text-4xl
+            font-semibold
+            text-slate-900
+          ">
             Track your cycle 🌸
           </h1>
 
 
-          <p className="mt-2 text-slate-600">
-            Add your period details to get personalized insights.
+          <p className="
+            mt-2
+            text-slate-600
+          ">
+            Add your period details to get personalised insights.
           </p>
+
 
 
 
           <form
             onSubmit={handleSubmit}
-            className="mt-8 space-y-5"
+            className="
+              mt-8
+              space-y-5
+            "
           >
+
 
 
             <div>
 
-              <label className="mb-2 block font-medium">
+              <label className="
+                font-medium
+              ">
                 Last period start date
               </label>
 
 
               <input
+
                 type="date"
+
                 value={lastPeriodStart}
+
                 onChange={(e)=>
                   setLastPeriodStart(e.target.value)
                 }
+
                 required
-                className="w-full rounded-2xl border px-4 py-3"
+
+                className="
+                  mt-2
+                  w-full
+                  rounded-2xl
+                  border
+                  p-3
+                "
+
               />
 
             </div>
@@ -131,22 +188,36 @@ export default function CyclePage() {
 
 
 
+
             <div>
 
-              <label className="mb-2 block font-medium">
+              <label className="
+                font-medium
+              ">
                 Average cycle length (days)
               </label>
 
 
               <input
+
                 type="number"
+
                 value={cycleLength}
+
                 onChange={(e)=>
                   setCycleLength(
                     Number(e.target.value)
                   )
                 }
-                className="w-full rounded-2xl border px-4 py-3"
+
+                className="
+                  mt-2
+                  w-full
+                  rounded-2xl
+                  border
+                  p-3
+                "
+
               />
 
             </div>
@@ -154,22 +225,36 @@ export default function CyclePage() {
 
 
 
+
             <div>
 
-              <label className="mb-2 block font-medium">
-                Period duration (days)
+              <label className="
+                font-medium
+              ">
+                Period length (days)
               </label>
 
 
               <input
+
                 type="number"
+
                 value={periodLength}
+
                 onChange={(e)=>
                   setPeriodLength(
                     Number(e.target.value)
                   )
                 }
-                className="w-full rounded-2xl border px-4 py-3"
+
+                className="
+                  mt-2
+                  w-full
+                  rounded-2xl
+                  border
+                  p-3
+                "
+
               />
 
             </div>
@@ -178,33 +263,112 @@ export default function CyclePage() {
 
 
             <button
-              type="submit"
-              disabled={loading}
-              className="w-full rounded-2xl bg-pink-500 py-3 text-white font-medium"
+              className="
+                w-full
+                rounded-2xl
+                bg-pink-500
+                py-3
+                font-semibold
+                text-white
+              "
             >
-
-              {loading
-                ? "Saving..."
-                : "Save Cycle"
-              }
-
+              Save Cycle
             </button>
 
-
-
-            {
-              message && (
-                <p className="text-center text-sm">
-                  {message}
-                </p>
-              )
-            }
 
 
           </form>
 
 
+
+          {message && (
+
+            <p className="
+              mt-4
+              text-pink-600
+            ">
+              {message}
+            </p>
+
+          )}
+
+
+
         </div>
+
+
+
+
+
+        <div className="
+          rounded-[2rem]
+          bg-white
+          p-8
+          shadow
+        ">
+
+
+          <h2 className="
+            text-2xl
+            font-semibold
+          ">
+            Your cycle history 💗
+          </h2>
+
+
+
+          <div className="
+            mt-5
+            space-y-3
+          ">
+
+
+            {cycles.length === 0 ? (
+
+              <p className="text-slate-500">
+                No cycles added yet.
+              </p>
+
+            ) : (
+
+
+              cycles.map((cycle)=>(
+
+                <div
+                  key={cycle.id}
+                  className="
+                    rounded-2xl
+                    bg-pink-50
+                    p-4
+                  "
+                >
+
+                  <p>
+                    Start: {cycle.last_period_start}
+                  </p>
+
+                  <p>
+                    Cycle length: {cycle.cycle_length_days} days
+                  </p>
+
+                  <p>
+                    Period length: {cycle.period_length_days} days
+                  </p>
+
+
+                </div>
+
+              ))
+
+            )}
+
+
+          </div>
+
+
+
+        </div>
+
 
 
       </div>
