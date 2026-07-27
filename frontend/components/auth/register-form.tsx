@@ -28,44 +28,82 @@ export function RegisterForm() {
         last_name: String(formData.get("last_name") || ""),
       });
 
+
+      // Save JWT tokens
+      localStorage.setItem(
+        "access",
+        response.tokens.access
+      );
+
+      localStorage.setItem(
+        "refresh",
+        response.tokens.refresh
+      );
+
+
+      // Save user details
+      localStorage.setItem(
+        "user",
+        JSON.stringify(response.user)
+      );
+
+
+      // Update auth context
       setUser(response.user);
+
 
       router.push("/dashboard");
 
+
     } catch (caughtError) {
+
       if (axios.isAxiosError(caughtError)) {
+
         const responseData = caughtError.response?.data;
+
 
         const serverMessage =
           typeof responseData === "object" &&
           responseData !== null &&
           "message" in responseData
             ? String(responseData.message)
+
             : typeof responseData === "object" &&
               responseData !== null &&
               "detail" in responseData
               ? String(responseData.detail)
+
               : null;
 
-        setError(serverMessage || "Unable to create your account right now.");
+
+        setError(
+          serverMessage ||
+          "Unable to create your account right now."
+        );
+
         return;
       }
 
-      setError("Unable to create your account right now.");
+
+      setError(
+        "Unable to create your account right now."
+      );
     }
   }
+
 
   return (
     <form
       onSubmit={handleSubmit}
       className="space-y-4 rounded-3xl border border-black/5 bg-white/80 p-6 shadow-sm backdrop-blur"
     >
+
       <div className="grid gap-4 md:grid-cols-2">
 
         <div>
           <label
-            className="mb-2 block text-sm font-medium text-slate-700"
             htmlFor="first_name"
+            className="mb-2 block text-sm font-medium text-slate-700"
           >
             First name
           </label>
@@ -74,6 +112,7 @@ export function RegisterForm() {
             id="first_name"
             name="first_name"
             type="text"
+            required
             className="w-full rounded-2xl border border-black/10 bg-white px-4 py-3 outline-none transition focus:border-black/30"
           />
         </div>
@@ -81,8 +120,8 @@ export function RegisterForm() {
 
         <div>
           <label
-            className="mb-2 block text-sm font-medium text-slate-700"
             htmlFor="last_name"
+            className="mb-2 block text-sm font-medium text-slate-700"
           >
             Last name
           </label>
@@ -100,8 +139,8 @@ export function RegisterForm() {
 
       <div>
         <label
-          className="mb-2 block text-sm font-medium text-slate-700"
           htmlFor="email"
+          className="mb-2 block text-sm font-medium text-slate-700"
         >
           Email
         </label>
@@ -118,8 +157,8 @@ export function RegisterForm() {
 
       <div>
         <label
-          className="mb-2 block text-sm font-medium text-slate-700"
           htmlFor="password"
+          className="mb-2 block text-sm font-medium text-slate-700"
         >
           Password
         </label>
@@ -135,11 +174,11 @@ export function RegisterForm() {
       </div>
 
 
-      {error ? (
+      {error && (
         <p className="text-sm text-rose-600">
           {error}
         </p>
-      ) : null}
+      )}
 
 
       <Button type="submit" className="w-full">

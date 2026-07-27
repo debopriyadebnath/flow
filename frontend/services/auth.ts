@@ -29,8 +29,9 @@ export type AuthSession = {
   message: string;
   user: AuthUser;
   profile?: UserProfile | null;
-  tokens?: AuthTokens | null;
+  tokens: AuthTokens;
 };
+
 
 export async function register(payload: {
   email: string;
@@ -38,34 +39,79 @@ export async function register(payload: {
   first_name?: string;
   last_name?: string;
 }) {
-  const response = await api.post<AuthSession>("/auth/register/", payload);
+  const response = await api.post<AuthSession>(
+    "/auth/register/",
+    payload
+  );
+
   return response.data;
 }
 
-export async function login(payload: { email: string; password: string }) {
-  const response = await api.post<AuthSession>("/auth/login/", payload);
+
+export async function login(payload: {
+  email: string;
+  password: string;
+}) {
+  const response = await api.post<AuthSession>(
+    "/auth/login/",
+    payload
+  );
+
   return response.data;
 }
+
 
 export async function refreshToken(refresh: string) {
-  const response = await api.post<AuthTokens>("/auth/refresh/", { refresh });
+  const response = await api.post<AuthTokens>(
+    "/auth/refresh/",
+    { refresh }
+  );
+
   return response.data;
 }
+
 
 export async function logout(refresh: string) {
-  await api.post("/auth/logout/", { refresh });
+  await api.post(
+    "/auth/logout/",
+    { refresh }
+  );
 }
 
+
 export async function getProfile(accessToken: string) {
-  const response = await api.get<{ user: AuthUser; profile: UserProfile }>("/profile/me/", {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+  const response = await api.get<{
+    user: AuthUser;
+    profile: UserProfile;
+  }>(
+    "/profile/me/",
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
   return response.data;
 }
 
-export async function updateProfile(accessToken: string, payload: Partial<UserProfile>) {
-  const response = await api.patch<{ user: AuthUser; profile: UserProfile }>("/profile/me/", payload, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+
+export async function updateProfile(
+  accessToken: string,
+  payload: Partial<UserProfile>
+) {
+  const response = await api.patch<{
+    user: AuthUser;
+    profile: UserProfile;
+  }>(
+    "/profile/me/",
+    payload,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
   return response.data;
 }
