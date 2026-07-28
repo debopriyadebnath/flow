@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate
+from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
 from .models import User, Profile
@@ -7,7 +8,7 @@ from .models import User, Profile
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True,
-        min_length=8
+        validators=[validate_password],
     )
 
     class Meta:
@@ -15,18 +16,19 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "email",
-            "username",
             "first_name",
             "last_name",
             "password",
         ]
+        read_only_fields = ["id"]
 
     def create(self, validated_data):
         password = validated_data.pop("password")
 
-        user = User(**validated_data)
-        user.set_password(password)
-        user.save()
+        user = User.objects.create_user(
+            password=password,
+            **validated_data,
+        )
 
         Profile.objects.create(user=user)
 
@@ -35,7 +37,10 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
-    password = serializers.CharField(write_only=True)
+    password = serializers.CharField(
+        write_only=True,
+        trim_whitespace=False,
+    )
 
     def validate(self, attrs):
         email = attrs.get("email")
@@ -43,12 +48,21 @@ class LoginSerializer(serializers.Serializer):
 
         user = authenticate(
             username=email,
-            password=password
+            password=password,
         )
 
         if not user:
             raise serializers.ValidationError(
-                "Invalid email or password."
+                {
+                    "detail": "Invalid email or password."
+                }
+            )
+
+        if not user.is_active:
+            raise serializers.ValidationError(
+                {
+                    "detail": "This account has been disabled."
+                }
             )
 
         attrs["user"] = user
@@ -56,16 +70,25 @@ class LoginSerializer(serializers.Serializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    full_name = serializers.SerializerMethodField()
+
     class Meta:
         model = User
         fields = [
             "id",
             "email",
-            "username",
             "first_name",
             "last_name",
+            "full_name",
         ]
-        read_only_fields = ["id", "email"]
+        read_only_fields = [
+            "id",
+            "email",
+            "full_name",
+        ]
+
+    def get_full_name(self, obj):
+        return f"{obj.first_name} {obj.last_name}".strip()
 
 
 class ProfileSerializer(serializers.ModelSerializer):
