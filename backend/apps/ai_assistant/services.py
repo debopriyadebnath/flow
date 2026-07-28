@@ -1,33 +1,26 @@
-import google.generativeai as genai
+import os
 
-from django.conf import settings
+from google import genai
+from google.genai import types
 
-print("Gemini Key:", settings.GEMINI_API_KEY)
 
-genai.configure(
-    api_key=settings.GEMINI_API_KEY
+client = genai.Client(
+    api_key=os.getenv("GEMINI_API_KEY")
 )
-
 
 
 def get_ai_response(message):
 
-    model = genai.GenerativeModel("gemini-2.5-pro")
-    prompt = f"""
-You are Flow+, an AI women's wellness assistant.
+    try:
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=message,
+            config=types.GenerateContentConfig(
+                temperature=0.7
+            )
+        )
 
-User message:
-{message}
+        return response.text
 
-Give a helpful, supportive,
-health-focused response.
-
-Do not diagnose medical conditions.
-Suggest professional help when needed.
-"""
-
-    response = model.generate_content(
-        prompt
-    )
-
-    return response.text
+    except Exception as e:
+        return f"AI Error: {str(e)}"
