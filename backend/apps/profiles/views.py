@@ -13,7 +13,6 @@ class ProfileView(RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticated]
 
-
     def get_object(self):
 
         profile, created = Profile.objects.get_or_create(
@@ -21,7 +20,6 @@ class ProfileView(RetrieveUpdateAPIView):
         )
 
         return profile
-
 
 
     def retrieve(self, request, *args, **kwargs):
@@ -32,5 +30,29 @@ class ProfileView(RetrieveUpdateAPIView):
             {
                 "user": UserSerializer(request.user).data,
                 "profile": ProfileSerializer(profile).data,
+            }
+        )
+
+
+    def update(self, request, *args, **kwargs):
+
+        profile = self.get_object()
+
+        serializer = self.get_serializer(
+            profile,
+            data=request.data,
+            partial=True
+        )
+
+        serializer.is_valid(
+            raise_exception=True
+        )
+
+        serializer.save()
+
+        return Response(
+            {
+                "message": "Profile updated successfully",
+                "profile": serializer.data
             }
         )

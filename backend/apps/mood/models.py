@@ -19,6 +19,14 @@ class MoodEntry(models.Model):
         related_name="mood_entries"
     )
 
+    cycle_entry = models.ForeignKey(
+        "cycles.CycleEntry",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="mood_entries"
+    )
+
     mood = models.CharField(
         max_length=20,
         choices=MOOD_CHOICES

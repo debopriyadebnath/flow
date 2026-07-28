@@ -1,10 +1,24 @@
-"""Django settings for the HERmony backend.
+"""
+Django settings for the HERmony backend.
 
 This initial scaffold keeps configuration centralized and phase 1 focused.
 """
 
 from pathlib import Path
 import os
+from datetime import timedelta
+
+from dotenv import load_dotenv
+
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(BASE_DIR / ".env")
+
+
+GEMINI_API_KEY = os.getenv(
+    "GEMINI_API_KEY"
+)
 from datetime import timedelta
 
 from dotenv import load_dotenv
@@ -45,6 +59,8 @@ INSTALLED_APPS = [
     "apps.services",
     "apps.utils",
     "apps.api",
+    "apps.water",
+
    
 ]
 
@@ -53,6 +69,7 @@ AUTH_USER_MODEL = "authentication.User"
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -104,6 +121,7 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

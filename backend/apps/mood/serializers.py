@@ -3,12 +3,21 @@ from rest_framework import serializers
 from .models import MoodEntry
 
 
-class MoodSerializer(serializers.ModelSerializer):
+class MoodEntrySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MoodEntry
-        fields = "__all__"
+
+        fields = [
+            "id",
+            "cycle_entry",
+            "mood",
+            "note",
+            "energy_level",
+            "created_at",
+        ]
+
         read_only_fields = [
-            "user",
+            "id",
             "created_at",
         ]

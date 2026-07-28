@@ -1,12 +1,23 @@
 from django.urls import path
 
-from .views import MoodListCreateView
+from .views import (
+    MoodEntryListCreateView,
+    MoodEntryDetailView,
+)
 
 
 urlpatterns = [
+
     path(
         "",
-        MoodListCreateView.as_view(),
-        name="mood-list-create",
+        MoodEntryListCreateView.as_view(),
+        name="mood-list-create"
     ),
+
+    path(
+        "<int:pk>/",
+        MoodEntryDetailView.as_view(),
+        name="mood-detail"
+    ),
+
 ]

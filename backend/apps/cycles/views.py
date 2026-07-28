@@ -1,4 +1,5 @@
 from rest_framework import generics
+from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Cycle, CycleEntry
@@ -37,10 +38,11 @@ class CycleEntryCreateView(generics.CreateAPIView):
     def perform_create(self, serializer):
         cycle_id = self.kwargs["cycle_id"]
 
-        cycle = Cycle.objects.get(
-            id=cycle_id,
-            user=self.request.user
-        )
+        cycle = get_object_or_404(
+    Cycle,
+    id=cycle_id,
+    user=self.request.user
+)
 
         serializer.save(
             cycle=cycle
